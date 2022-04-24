@@ -12,20 +12,16 @@ def insertion_search(array: list[int]) -> list[int]:
     for unsortedIndex in range(1, len(array)):  
         sortedIndex = unsortedIndex
 
-        #value to be compared needs to be captured, since its an in-place operation
-        #means: array[unsortedIndex] has a different value after the algorhythm is performed
-        #also important to be able to switch more than one position of the same value
-
         arrayValue = array[unsortedIndex]
 
-        while sortedIndex > 0:  #j gives the starting index of the 'sorted' section, for going from right to left through the sorted list.
+        while sortedIndex > 0:  #j captures the most right index of the 'sorted' area of the array, for going from right to left through the sorted list for comparing it to the unsorted values.
 
-            #if 'righttish' value is lower than 'leftish' value, they need to be switched
+            #if 'unsorted' value is lower than 'sorted' value, they need to be switched to keep the sort-by-value order
             if arrayValue < array[sortedIndex - 1]: 
                 array[sortedIndex - 1], array[sortedIndex] = arrayValue, array[sortedIndex - 1]
     
             sortedIndex-= 1   #moving leftwards through the sorted list values
 
-    return array
+    return array  #return the sorted array
 
 
