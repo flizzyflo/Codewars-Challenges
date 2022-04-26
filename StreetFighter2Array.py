@@ -34,7 +34,7 @@ def street_fighter_selection(fighters: list[str], initial_position: tuple[int, i
                 
     return fighter_result_list
 
+## Example input for testing purposes
 
-
-print(street_fighter_selection([["Ryu", "E.Honda", "Blanka", "Guile", "Balrog", "Vega"],
-                                ["Ken", "Chun Li", "Zangief", "Dhalsim", "Sagat", "M.Bison"]],(0,0),['left', 'right', 'down', 'left']))
+## print(street_fighter_selection([["Ryu", "E.Honda", "Blanka", "Guile", "Balrog", "Vega"],
+##                                 ["Ken", "Chun Li", "Zangief", "Dhalsim", "Sagat", "M.Bison"]],(0,0),['left', 'right', 'down', 'left']))
