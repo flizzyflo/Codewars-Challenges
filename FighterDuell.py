@@ -1,3 +1,4 @@
+
 class Fighter:
     def __init__(self, name: str, health: int, damage_per_attack: int) -> None:
         self.name = name
@@ -38,7 +39,7 @@ def declare_first_attacker(fighter_1: object, fighter_2: object, first_attacker:
     return first_attacker, second_attacker
 
 
-def declare_winner(fighter1: object, fighter2: object, first_attacker: str):
+def declare_winner(fighter1: object, fighter2: object, first_attacker: str) -> None:
     
     first_attacker, second_attacker = declare_first_attacker(fighter1, fighter2, first_attacker)
 
