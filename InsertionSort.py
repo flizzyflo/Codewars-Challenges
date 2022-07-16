@@ -1,6 +1,6 @@
 
                            
-def insertion_search(array: list[int]) -> list[int]:
+def insertion_sort(array: list[int]) -> list[int]:
 
     """Sorts an unsorted Array of integers. Setting index 0 as sorted, iterating through
     all items within the list comparing to the index 0 item. If iterated item is less, than the
