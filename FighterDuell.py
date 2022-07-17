@@ -4,7 +4,7 @@ class Fighter:
         self.name = name
         self.health = health
         self.damage_per_attack = damage_per_attack
-        self.alive = True
+        self.isAlive = True
 
     def get_name(self) -> str:
         return self.name
@@ -17,11 +17,11 @@ class Fighter:
         if opponent.health <= 0:
             opponent.set_alive(False)
     
-    def get_alive(self) -> bool:
-        return self.alive
+    def get_isAlive(self) -> bool:
+        return self.isAlive
 
-    def set_alive(self, alive: bool) -> None:
-        self.alive = alive
+    def set_isAlive(self, isAlive: bool) -> None:
+        self.isAlive = isAlive
 
     def print_stats(starter: object, second: object) -> None:
         print(f"{starter.get_name()} hp: {starter.get_health()}, {second.get_name()} hp: {second.get_health()}")
