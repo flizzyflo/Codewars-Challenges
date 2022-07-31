@@ -15,6 +15,3 @@ def euklidsAlgorithm(a: int, b: int) -> int:
         
         if c <= 0:
             return a
-
-
-print(euklidsAlgorithm(64, 34))
