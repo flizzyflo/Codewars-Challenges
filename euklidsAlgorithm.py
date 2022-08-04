@@ -15,3 +15,5 @@ def euklidsAlgorithm(a: int, b: int) -> int:
         
         if c <= 0:
             return a
+
+print("0x2b9")
