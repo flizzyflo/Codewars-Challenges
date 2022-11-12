@@ -1,4 +1,3 @@
-import random
 
 class LinkedListElement:
 
@@ -174,40 +173,3 @@ class LinkedListHead:
         else:
             return self.__sort_elements(LinkedListNode.next)
 
-
-
-
-l = LinkedListHead()
-
-h = LinkedListElement(12)
-g = LinkedListElement(66, h)
-f = LinkedListElement(43,g)
-e = LinkedListElement(53, f)
-d = LinkedListElement(9,e)
-c = LinkedListElement(44, d)
-b = LinkedListElement(2, c)
-a = LinkedListElement(4, b)
-l.next = a
-l.get_list()
-l.sort_elements()
-l.get_list()
-
-# for i in range(1,15):
-    
-#     l.insert_new_value(random.randint(1, 150))
-#     l.get_list()
-
-# print(l.is_sorted())
-
-# while True:
-#     l.get_list()
-#     w= input("remove elelemt (y/n)")
-#     if w == "y":
-#         e = input("element:")
-#         e = int(e)
-#         l.remove_value_from_list(e)
-    
-#     n = input("enter number to look up:")
-#     n = int(n)
-#     print(l.value_in_list(n))
-    
