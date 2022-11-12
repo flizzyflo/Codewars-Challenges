@@ -2,6 +2,7 @@ import random
 
 class LinkedListElement:
 
+    """List Element Class to represent the value and reference the next element within the linked list."""
 
     def __init__(self, value: int, next: 'LinkedListElement' = None) -> None:
         self.value = value
@@ -10,6 +11,8 @@ class LinkedListElement:
 
 class LinkedListHead:
 
+    """Linked List Control Class. Manages the linked list and accesses the elements. Is used to create, insert and remove elements from the list.
+    Is also used to represent the list."""
 
     def __init__(self) -> None:
         self.value = "head"
@@ -18,11 +21,14 @@ class LinkedListHead:
 
     def get_list(self) -> str:
 
-        print(self.__get_list_overview(self))
+        """Method to represent the list as printed statement"""
+
+        print(self.__get_list(self))
 
         
-    def __get_list(self, 
-                            LinkedListNode: 'LinkedListElement') -> None:
+    def __get_list(self, LinkedListNode: 'LinkedListElement') -> None:
+
+        """Private Method to print the list elements."""
 
         if LinkedListNode.next == None:
             return f"{LinkedListNode.value} -> None"
@@ -31,20 +37,24 @@ class LinkedListHead:
             return f"{LinkedListNode.value} -> {self.__get_list(LinkedListNode.next)}"
 
 
-    def is_empty(self) -> None:
+    def is_empty(self) -> bool:
+        
+        """Returns the boolean value if the list contains elements or not"""
+
         return self.next == None
 
 
-    def value_in_list(self, 
-                      value_to_search: int) -> bool:
+    def value_in_list(self, value_to_search: int) -> bool:
+
+        """Returns a boolean value if a specific value is within the list or not"""
 
         return self.__value_in_list(value_to_search, self)
 
 
-    def __value_in_list(self, 
-                        value_to_search: int, 
-                        LinkedListNode: 'LinkedListElement') -> bool:
+    def __value_in_list(self, value_to_search: int, LinkedListNode: 'LinkedListElement') -> bool:
         
+        """Private method which is used to look up values within the linked list. Returns a boolean value according to the existence or absence of a specific value."""
+
         if LinkedListNode.value == value_to_search:
             return True
 
@@ -54,31 +64,28 @@ class LinkedListHead:
         return self.__value_in_list(value_to_search, LinkedListNode.next)
 
 
-    def insert_new_value(self, 
-                         value_to_insert: int) -> None:
+    def insert_new_value(self, value_to_insert: int) -> None:
 
-        self.__insert_new_value(value_to_insert= value_to_insert, 
-                                LinkedListNode= self)
+        """Public Method to insert a new value into the linked list."""
+
+        self.__insert_new_value(value_to_insert= value_to_insert, LinkedListNode= self)
 
 
-    def __insert_new_value(self, 
-                           value_to_insert: int, 
-                           LinkedListNode: 'LinkedListElement') -> None:
+    def __insert_new_value(self, value_to_insert: int, LinkedListNode: 'LinkedListElement') -> None:
         
-        """Inserts elements in a sorted way, in a ascending order."""
+        """Private Method to insert elements in a sorted way, in a ascending order."""
 
         if LinkedListNode.next == None:
             # list is empty, no element exists.
             LinkedListNode.next = LinkedListElement(value_to_insert, None)
 
-        elif value_to_insert <= LinkedListNode.next.value:
+        elif value_to_insert < LinkedListNode.next.value:
             # next node value is bigger than value to be inserted
             # next node has to be the predecessor of this new value and new LL element
 
-            tempNext = LinkedListNode.next.next
-            tempHead = LinkedListNode.next.value
-            LinkedListNode.next.value = value_to_insert
-            LinkedListNode.next.next = LinkedListElement(tempHead, tempNext)
+            tempNext = LinkedListNode.next
+            LinkedListNode.next = LinkedListElement(value_to_insert, tempNext)
+
 
         elif LinkedListNode.next.next == None:
             # at least one node exists, but no next element, end of list is reached.
@@ -86,13 +93,13 @@ class LinkedListHead:
             LinkedListNode.next.next = LinkedListElement(value_to_insert)
 
         else:
-            self.__insert_new_value(value_to_insert, 
-                                    LinkedListNode.next.next)
+            self.__insert_new_value(value_to_insert, LinkedListNode.next)
 
 
-    def remove_value_from_list(self, 
-                               value_to_remove: int) -> None:
+    def remove_value_from_list(self, value_to_remove: int) -> None:
         
+        """Removes an element from the linked list"""
+
         if self.is_empty() or not self.value_in_list(value_to_remove):
             return
 
@@ -102,10 +109,10 @@ class LinkedListHead:
                                           LinkedListNode= self)
 
 
-    def __remove_value_from_list(self, 
-                                 value_to_remove: int, 
-                                 LinkedListNode: 'LinkedListElement') -> None:
+    def __remove_value_from_list(self, value_to_remove: int, LinkedListNode: 'LinkedListElement') -> None:
         
+        """Private method to remove a specific value from the linked list."""
+
         if LinkedListNode.next.value == value_to_remove:
             LinkedListNode.next = LinkedListNode.next.next
 
@@ -113,21 +120,94 @@ class LinkedListHead:
             self.__remove_value_from_list(value_to_remove, LinkedListNode.next)
 
 
+    def is_sorted(self) -> bool:
+        
+        """Checks whether the linked list elements are sorted or not."""
+
+        return self.__is_sorted(self)
+
+    
+    def __is_sorted(self, LinkedListNode: 'LinkedListElement') -> bool:
+
+        """Private method to return a boolean if the list is sorted or not."""
+
+        if LinkedListNode.next == None:
+            return True
+        
+        elif isinstance(LinkedListNode.value, str):
+            return self.__is_sorted(LinkedListNode.next)
+
+        elif LinkedListNode.value > LinkedListNode.next.value:
+            return False
+
+        else:
+            return self.__is_sorted(LinkedListNode.next)
+
+
+    def sort_elements(self) -> None:
+        
+        """Main sort function. applies some sort ob bubblesort to sort the linked list. Sorts as long as the is_sorted() returns true."""
+
+        while True:
+            self.__sort_elements(self)
+            
+            if self.is_sorted():
+                break
+
+    def __sort_elements(self, LinkedListNode: 'LinkedListElement') -> None:
+        
+        """Private Method to sort the linked list elements"""
+
+        # starts with head node. next pointer points to first linked list element
+        if LinkedListNode.next == None or LinkedListNode.next.next == None:
+            return
+        
+        # start -> 8 -> 4 -> 6
+        elif LinkedListNode.next.next.value < LinkedListNode.next.value:
+   
+            tempNextNext = LinkedListNode.next.next # 4
+            tempNext = LinkedListNode.next # 8
+            tempNext.next = tempNextNext.next # 6
+            tempNextNext.next = tempNext
+            LinkedListNode.next = tempNextNext
+
+        else:
+            return self.__sort_elements(LinkedListNode.next)
+
+
+
 
 l = LinkedListHead()
-l.insert_new_value(4)
 
-for i in range(1,5):
+h = LinkedListElement(12)
+g = LinkedListElement(66, h)
+f = LinkedListElement(43,g)
+e = LinkedListElement(53, f)
+d = LinkedListElement(9,e)
+c = LinkedListElement(44, d)
+b = LinkedListElement(2, c)
+a = LinkedListElement(4, b)
+l.next = a
+l.get_list()
+l.sort_elements()
+l.get_list()
+
+# for i in range(1,15):
     
-    l.insert_new_value(random.randint(1, 150))
+#     l.insert_new_value(random.randint(1, 150))
+#     l.get_list()
 
+# print(l.is_sorted())
 
-while True:
-    w= input("remove elelemt (y/n)")
-    if w == "y":
-        e = input("element:")
-        e = int(e)
-        l.remove_value_from_list(e)
+# while True:
+#     l.get_list()
+#     w= input("remove elelemt (y/n)")
+#     if w == "y":
+#         e = input("element:")
+#         e = int(e)
+#         l.remove_value_from_list(e)
     
-    l.get_list()
+#     n = input("enter number to look up:")
+#     n = int(n)
+#     print(l.value_in_list(n))
     
