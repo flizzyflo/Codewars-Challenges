@@ -133,7 +133,7 @@ class LinkedListHead:
         if LinkedListNode.next == None:
             return True
         
-        elif isinstance(LinkedListNode.value, str):
+        elif not isinstance(LinkedListNode.value, int):
             return self.__is_sorted(LinkedListNode.next)
 
         elif LinkedListNode.value > LinkedListNode.next.value:
