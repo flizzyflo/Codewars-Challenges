@@ -1,6 +1,6 @@
 
 import string
-
+string.punctuation
 def rank(students: str, weights: int, rank:int) -> int:
     
     students = students.split(",")
