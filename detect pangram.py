@@ -1,17 +1,15 @@
 
-from string import ascii_lowercase
+import string 
 
-def is_pangram(string: str) -> bool:
+def is_pangram(strng: str) -> bool:
 
-    """Checks if a given string is a pangram. A pangram is a stream of letters which includes all letters of a given alphabet."""
+    """Checks if a given string is a pangram. 
+    A pangram is a stream of letters which includes all letters of a given alphabet."""
 
-    alphabet_lower: str = ascii_lowercase
+    alphabet_lower: str = string.ascii_lowercase
 
-    for letter in alphabet_lower:
-        if letter not in string.lower():
-            return False
-
-    return True
+    return {letter.lower() for letter in strng if letter.strip() not in string.punctuation} == set(alphabet_lower)
 
 
-# print(is_pangram("The quick, brown fox jumps over the lazy dog!"))
+
+print(is_pangram("The quick, brown fox jumps over the lazy dog!"))

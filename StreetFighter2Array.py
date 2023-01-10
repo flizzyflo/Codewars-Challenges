@@ -1,9 +1,12 @@
 
 def street_fighter_selection(fighters: list[str], initial_position: tuple[int, int], moves: list[str]) -> list:
     
+    """Function to track all fighters the cursor is passing from start position until destination is reached."""
+
     fighter_result_list = []  
 
-    x_axis_id, y_axis_id = initial_position[1],initial_position[0]  #startposition wird definitert
+    x_axis_id: int = initial_position[1] 
+    y_axis_id: int = initial_position[0]  #startposition wird definitert
     for move in moves:
 
         if move =="up":
@@ -34,7 +37,7 @@ def street_fighter_selection(fighters: list[str], initial_position: tuple[int, i
                 
     return fighter_result_list
 
-## Example input for testing purposes
+# Example input for testing purposes
 
-## print(street_fighter_selection([["Ryu", "E.Honda", "Blanka", "Guile", "Balrog", "Vega"],
-##                                 ["Ken", "Chun Li", "Zangief", "Dhalsim", "Sagat", "M.Bison"]],(0,0),['left', 'right', 'down', 'left']))
+print(street_fighter_selection([["Ryu", "E.Honda", "Blanka", "Guile", "Balrog", "Vega"],
+                                ["Ken", "Chun Li", "Zangief", "Dhalsim", "Sagat", "M.Bison"]],(0,0),['left', 'right', 'down', 'left']))

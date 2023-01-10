@@ -2,16 +2,14 @@
 
 def move_numbers(array: list, number: int = 0) -> list:
 
-    if array == []:
+    if not array:
         return []
 
-    number_to_move = number
+    number_to_move: int = number
+    sorted: bool = False
+    total_numbers: list[int] = array.count(0)
 
-    sorted = False
-
-    total_numbers = array.count(0)
-
-    while sorted == False:  
+    while not sorted:  
 
         for index, number in enumerate(array):
             if number == number_to_move and (index + 1) < len(array):

@@ -31,6 +31,3 @@ def count_letters(word: str) -> dict[str, int]:
 def same_letter_occurence(letter_occurence_dictionary: dict[str, int]) -> bool:
     
     return len(set(letter_occurence_dictionary.values())) == 1
-
-
-print(is_isogram(" "))

@@ -2,13 +2,15 @@
 import string
 
 def high(string_to_evaluate: str) -> str:
-    lowercase_letters = string.ascii_lowercase
-    single_letter_values: dict[str, int] = dict() 
-    words: list[str] = string_to_evaluate.split()
-    word_values: dict[str, int] = dict()
 
-    single_letter_values = {letter: idx for idx, letter in enumerate(lowercase_letters, 1)}
-    word_values = {word: 0 for word in words} 
+    """Returns the highest valued word within the string to evaluate. 
+    Value depends on position within alphabet."""
+
+    lowercase_letters: str = string.ascii_lowercase
+    words: list[str] = string_to_evaluate.split()
+
+    single_letter_values: dict[str, int] = {letter: idx for idx, letter in enumerate(lowercase_letters, 1)}
+    word_values: dict[str, int] = {word: 0 for word in words} 
     
     for word in words:
         for letter in word:
@@ -18,5 +20,3 @@ def high(string_to_evaluate: str) -> str:
     return max(word_values, key= lambda key: word_values[key])
     
     
-
-print(high("man i need a taxi up to ubud"))

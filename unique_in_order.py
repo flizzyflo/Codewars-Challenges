@@ -14,9 +14,9 @@ def unique_in_order(iterable: list[int] | str) -> list[int|str]:
     if len(iterable) == 1:
         return [iterable[0]]
     
-    curr_pos = 0
-    iter_length = len(iterable) - 1
-    result = list()
+    curr_pos: int = 0
+    iter_length: int = len(iterable) - 1
+    result: list[int|str] = list()
 
     while curr_pos <= iter_length:
         

@@ -1,4 +1,4 @@
-import math
+
 def expand(expression: str) -> str:
     
     """
@@ -40,6 +40,9 @@ def expand(expression: str) -> str:
     # basecase: exponent = 2 -> return a^2 + 2ab + b^2 (==(a+b)^2)
     # dictionary für alle variable, und dann zusammenführen derer in der lösung, absteigend nach exponent
     # basecase: exponent = 1
+
+
+    # WIP
 
     term, exponent = expression.split("^")
 

@@ -15,7 +15,7 @@ class Fighter:
     def attack_opponent(self, opponent: object) -> None:
         opponent.health -= self.damage_per_attack
         if opponent.health <= 0:
-            opponent.set_alive(False)
+            opponent.set_isAlive(False)
     
     def get_isAlive(self) -> bool:
         return self.isAlive
@@ -44,23 +44,23 @@ def declare_winner(fighter1: object, fighter2: object, first_attacker: str) -> N
     first_attacker, second_attacker = declare_first_attacker(fighter1, fighter2, first_attacker)
 
 
-    while first_attacker.get_alive() == True and second_attacker.get_alive() == True:
+    while first_attacker.get_isAlive() == True and second_attacker.get_isAlive() == True:
         
         Fighter.print_stats(first_attacker, second_attacker)
         
         first_attacker.attack_opponent(second_attacker)
 
-        if first_attacker.get_alive() == False:
+        if first_attacker.get_isAlive() == False:
             break
 
         second_attacker.attack_opponent(first_attacker)
 
-        if second_attacker.get_alive() == False:
+        if second_attacker.get_isAlive() == False:
             break
     
     Fighter.print_stats(first_attacker, second_attacker)
 
-    if first_attacker.get_alive() == True:
+    if first_attacker.get_isAlive() == True:
         return first_attacker.get_name()
 
     else:
