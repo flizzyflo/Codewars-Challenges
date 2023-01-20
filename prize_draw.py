@@ -1,4 +1,3 @@
-import itertools
 import string
 
 def rank(students: str, weights: int, rank:int) -> int:
@@ -32,4 +31,3 @@ def evaluate_student_name(student: str, letter_values: dict[str, int]) -> int:
     
     return sum(letter_values[letter.lower()] for letter in student) + len(student)
 
-# print(rank('William,Willaim,Olivia,Olivai,Lily,Lyli', [1, 1, 1, 1, 1, 1], 1))
