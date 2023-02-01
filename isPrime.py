@@ -1,6 +1,9 @@
 
 def isPrime(number: int) -> bool:
 
+    if not isinstance(number, int):
+        return False
+
     if number < 2:
         return False
     
