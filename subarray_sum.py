@@ -18,3 +18,4 @@ def max_sequence(arr: list[int]) -> int:
         best_sum = max(best_sum, current_sum)
 
     return best_sum
+
