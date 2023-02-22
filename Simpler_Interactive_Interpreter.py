@@ -1,7 +1,7 @@
 import re
 
 
-def tokenize(expression):
+def tokenize(expression: str) -> list[str]:
     if expression == "":
         return []
 
@@ -22,7 +22,6 @@ class Interpreter:
 
         self.special_operators = ["*", "/", "%"]
         self.parentheses_pairs: dict[str, str] = {"(": ")", "[": "]"}
-
 
     def multiplication(self, left, right):
         if left in self.vars.keys() and right in self.vars.keys():
@@ -78,13 +77,21 @@ class Interpreter:
         self.vars[left] = right
         return self.vars[left]
 
-    def get_value_of(self, variable):
-        return self.vars[variable]
-
     def contains_parentheses(self, expression: list[str]) -> bool:
+
+        """
+        Checks whether an expression contains any parentheses at all
+        """
+
         return any([True if item in self.parentheses_pairs.keys() else False for item in expression])
 
     def has_valid_parentheses(self, expression: list[str]) -> bool:
+
+        """
+        Checks whether an expression has a valid set of parentheses or not. Returns
+        boolean value
+        """
+
         open_parenthesis: str = list()
 
         for parenthesis in expression:
@@ -102,6 +109,10 @@ class Interpreter:
         return len(open_parenthesis) == 0
 
     def collect_sub_expressions(self, expression: list[str]) -> list[int, int]:
+
+        """
+        Collects indexes of substrings of the expression where a parenthesis pair is located at.
+        """
 
         open_par: list[int] = list()
         sub_expressions: list[tuple[int, int]] = list()
@@ -127,16 +138,7 @@ class Interpreter:
 
             idx += 1
 
-
-    def input(self, expression):
-
-        # generate tokens out of expression
-        # returns a splitted list of all single elements of the expression
-
-        if not expression or expression == " ":
-            return ""
-
-        tokens = tokenize(expression)
+    def check_special_cases(self, tokens: list[str]):
 
         # asking for variable value
         if len(tokens) == 1 and self.is_letter(tokens[0]):
@@ -150,7 +152,7 @@ class Interpreter:
         # base case direct variable assignement
         if len(tokens) == 3 and "=" in tokens:
             self.vars[tokens[0]] = tokens[2]
-            return tokens[2]
+            return float(tokens[2])
 
         # distinguish parentheses or no parentheses case
         # case assignment of a complex calculation to a variable
@@ -159,11 +161,56 @@ class Interpreter:
             tokens = self.insert_variable_values(expression=tokens[2:])
             return self.equality(new_variable, self.evaluate_expression(expression=tokens))
 
-        # case not an assignment but a calculation
+        else:
+            return None
+
+    def is_not_calculated(self, expression):
+        return any(True if symbol in expression else False for symbol in ["-", "+", "/", "*", "%"] )
+    def input(self, expression: str) -> int | float:
+
+        # generate tokens out of expression
+        # returns a splitted list of all single elements of the expression
+
+        if not expression or expression == " ":
+            return ""
+
+        expression = self.__input(expression)
+
+        if isinstance(expression, float | int):
+            return expression
+
+        tokens = tokenize(expression= expression)
+        return self.evaluate_expression(tokens)
+
+    def __input(self, expression: str) -> float | int | str:
+
+        tokens = tokenize(expression)
+
+        if not self.check_special_cases(tokens= tokens) is None:
+            return self.check_special_cases(tokens= tokens)
+
+        if not self.contains_parentheses(expression= tokens):
+            tokens = self.insert_variable_values(tokens)
+            return self.evaluate_expression(expression=tokens)
+
+        while self.has_valid_parentheses(expression= tokens):
+
+            tokens = self.replace_parentheses_values(expression=expression)
+            expression = "".join(tokens)
+            if not self.contains_parentheses(expression= tokens):
+                return tokens
+
         else:
             tokens = self.insert_variable_values(tokens)
             return self.evaluate_expression(expression=tokens)
 
+    def replace_parentheses_values(self, expression: str) -> str:
+        parentheses_indexes = self.collect_sub_expressions(expression=expression)
+        start_index, end_index = parentheses_indexes[0]
+        e = tokenize(expression[start_index + 1: end_index])
+        e = self.insert_variable_values(e)
+        calculated_parenthesis = self.evaluate_expression(e)
+        return expression.replace(expression[start_index: end_index + 1], str(calculated_parenthesis))
 
     def is_stored_as_variable(self, token: str) -> bool:
         return token in self.vars.keys()
@@ -220,28 +267,3 @@ class Interpreter:
                 result = self.functions[operator](float(result), float(value))
 
         return result
-
-
-# To Do: Implement the parenthesis sub_expression into the calculation
-# Fix bug with expressions like 2 * 2 * 5 * 4
-#
-#
-
-
-if __name__ == '__main__':
-    c = Interpreter()
-    c.input("a = 3")
-    c.input("b = 2")
-    print(c.vars)
-    x = "2 + (2 * 4 * 4) + 5 + 2 - 5"
-    print(c.contains_parentheses(x))
-   # print(c.input(x))
-    st = c.collect_sub_expressions(x)
-    for item in st:
-        st, end = item
-        e = tokenize(x[st + 1:end])
-        e = c.insert_variable_values(e)
-        ress = c.evaluate_expression(e)
-        ttt = x.replace(x[st: end], str(ress))
-
-
