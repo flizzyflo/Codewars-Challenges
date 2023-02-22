@@ -141,7 +141,7 @@ class Interpreter:
     def check_special_cases(self, tokens: list[str]):
 
         # asking for variable value
-        if len(tokens) == 1 and self.is_letter(tokens[0]):
+        if len(tokens) == 1 and self.is_number(tokens[0]):
 
             if self.is_stored_as_variable(tokens[0]):
                 return self.vars[tokens[0]]
@@ -150,7 +150,7 @@ class Interpreter:
                 raise Exception("Invalid identifier. No variable with name 'y' was found.")
 
         # base case direct variable assignement
-        if len(tokens) == 3 and "=" in tokens:
+        elif len(tokens) == 3 and "=" in tokens:
             self.vars[tokens[0]] = tokens[2]
             return float(tokens[2])
 
@@ -162,10 +162,11 @@ class Interpreter:
             return self.equality(new_variable, self.evaluate_expression(expression=tokens))
 
         else:
-            return None
+            return False
 
     def is_not_calculated(self, expression):
-        return any(True if symbol in expression else False for symbol in ["-", "+", "/", "*", "%"] )
+        return any(True if symbol in expression else False for symbol in ["-", "+", "/", "*", "%"])
+
     def input(self, expression: str) -> int | float:
 
         # generate tokens out of expression
@@ -184,19 +185,28 @@ class Interpreter:
 
     def __input(self, expression: str) -> float | int | str:
 
+        """
+        Subroutine to process input given and calculate the value of the expression.
+        """
+
         tokens = tokenize(expression)
 
-        if not self.check_special_cases(tokens= tokens) is None:
+        # Special case
+        if self.check_special_cases(tokens= tokens):
             return self.check_special_cases(tokens= tokens)
 
+        # No parenthesis within the expression. Simple calculation
         if not self.contains_parentheses(expression= tokens):
             tokens = self.insert_variable_values(tokens)
             return self.evaluate_expression(expression=tokens)
 
+        # case parenthesis  within the expression
         while self.has_valid_parentheses(expression= tokens):
 
             tokens = self.replace_parentheses_values(expression=expression)
             expression = "".join(tokens)
+
+            # No more parenthesis left within the tokens
             if not self.contains_parentheses(expression= tokens):
                 return tokens
 
@@ -205,22 +215,51 @@ class Interpreter:
             return self.evaluate_expression(expression=tokens)
 
     def replace_parentheses_values(self, expression: str) -> str:
+
+        """
+        Extracts a parenthesis and calculates its value. Returns the original expression
+        where the first parenthesis is replaced by its calculated value.
+        """
+
         parentheses_indexes = self.collect_sub_expressions(expression=expression)
-        start_index, end_index = parentheses_indexes[0]
-        e = tokenize(expression[start_index + 1: end_index])
-        e = self.insert_variable_values(e)
-        calculated_parenthesis = self.evaluate_expression(e)
-        return expression.replace(expression[start_index: end_index + 1], str(calculated_parenthesis))
 
-    def is_stored_as_variable(self, token: str) -> bool:
-        return token in self.vars.keys()
+        # grab first pair of indices
+        parentheses_start_index, parentheses_end_index = parentheses_indexes[0]
 
-    def is_letter(self, token: str) -> bool:
-        return token.isnumeric()
+        # split the content of the parenthesis into a list of strings
+        parenthesis_expression = tokenize(expression[parentheses_start_index + 1: parentheses_end_index])
+
+        # insert variable values into parenthesis content string if it contains any variables
+        parenthesis_expression = self.insert_variable_values(expression=parenthesis_expression)
+
+        # calculate value of the parenthesis expression
+        parenthesis_value = self.evaluate_expression(expression=parenthesis_expression)
+        return expression.replace(expression[parentheses_start_index: parentheses_end_index + 1],
+                                  str(parenthesis_value))
+
+    def is_stored_as_variable(self, string: str) -> bool:
+
+        """
+        Returns true if the string passed in as argument is already stored as variable, independend if
+        it stores a value or not.
+        """
+
+        return string in self.vars.keys()
+
+    def is_number(self, string: str) -> bool:
+
+        """
+        Checks whether the string passed in is a letter or numeric
+        """
+
+        return string.isnumeric()
 
     def insert_variable_values(self, expression: list[str]) -> list[str]:
 
-        # replaces variables within an expression with values of corresponding variable
+        """
+        Replaces variables within an expression with values of corresponding variable
+        """
+
         return [self.vars[variable] if variable in self.vars.keys() else variable for variable in expression]
 
     def evaluate_expression(self, expression: list[str]) -> int | float:
@@ -267,3 +306,7 @@ class Interpreter:
                 result = self.functions[operator](float(result), float(value))
 
         return result
+
+if __name__ == '__main__':
+    c = Interpreter()
+    print(c.input("3 * 4 + (3 - 2)"))
