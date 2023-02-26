@@ -64,33 +64,40 @@ accessing its default attribute should always yield current time.
 import re
 from datetime import datetime
 
+
 class ValidationError:
     pass
 
 
 class CharField:
     
-    def __init__(self, char_value: str = "", min_length: int = 0, max_length: int = None, default: str = None, blank: bool = False) -> None:
+    def __init__(self,
+                 char_value: str = "",
+                 min_length: int = 0,
+                 max_length: int = None,
+                 default: str = None,
+                 blank: bool = False) -> None:
+
         self.min_length = min_length
         self.max_length = max_length
         self.blank = blank
 
         if char_value == "":
             self.char_value = default
+
         else:
             self.char_value = char_value
-        
-    
+
     def __repr__(self) -> str:
         return self.char_value
 
-    
-    def validate(self, char_value: str) -> bool:
-        
-        return self.has_correct_length(char_value) and self.has_correct_type(char_value)
-    
+    def validate(self,
+                 char_value: str) -> bool:
 
-    def has_correct_length(self, char_value: str) -> bool:
+        return self.has_correct_length(char_value) and self.has_correct_type(char_value)
+
+    def has_correct_length(self,
+                           char_value: str) -> bool:
 
         if self.max_length:
             return self.min_length <= len(char_value) <= self.max_length
@@ -99,13 +106,18 @@ class CharField:
             return self.min_length <= len(char_value)
 
 
-    def has_correct_type(self, char_value: str) -> bool:
+    def has_correct_type(self,
+                         char_value: str) -> bool:
         return isinstance(char_value, str)
 
 
 class IntegerField:
     
-    def __init__(self, min_value: int = None, max_value: int = None, default: int = None, blank: bool = False) -> None:
+    def __init__(self,
+                 min_value: int = None,
+                 max_value: int = None,
+                 default: int = None,
+                 blank: bool = False) -> None:
         self.min_value = min_value
         self.max_value = max_value
 
@@ -150,46 +162,67 @@ class EmailField:
 
 class Model:
 
-    def __init__(self, first_name: str, last_name: str, email: str, default: str = None, blank: bool = False) -> None:
+    def __init__(self,
+                 first_name: str,
+                 last_name: str,
+                 email: str,
+                 default: str = None,
+                 blank: bool = False) -> None:
         
-        self.first_name = CharField(first_name)
-        self.last_name = CharField(last_name)
+        self.first_name = CharField(char_value=first_name)
+        self.last_name = CharField(char_value=last_name)
         self.email = EmailField(email)
         self.is_verified = BooleanField()
         self.date_joined = DateTimeField()
         self.age = IntegerField()
         self.default = default
         self.blank = blank
+        self.valid_data = []
     
         # create getter and setter methods for the single fields
     
     def validate(self) -> bool:
         
-        """Check if data is entered correct. Is correct when every single piece of data is entered correct."""
+        """
+        Check if data is entered correct. Is correct when every single piece of data is entered correct.
+        """
         
-        return self.first_name.validate()
+        return all(self.valid_data)
+
 
 class User(Model):
-    first_name = CharField(max_length=30)
+    first_name = CharField(max_length=3)
     last_name = CharField(max_length=50)
     email = EmailField()
     is_verified = BooleanField(default=False)
     date_joined = DateTimeField(auto_now=True)
     age = IntegerField(min_value=5, max_value=120, blank=True)
 
-    def __init__(self, first_name: str, last_name: str, email: str, default: str = None, blank: bool = False) -> None:
+    def __init__(self,
+                 first_name: str,
+                 last_name: str,
+                 email: str, default: str = None,
+                 blank: bool = False) -> None:
+
+        self.valid_data: bool = []
+
         if User.first_name.validate(first_name):
+            self.valid_data.append(True)
             self.first_name = first_name
         else:
+            self.valid_data.append(False)
             self.first_name = default
 
         if User.last_name.validate(last_name):
+            self.valid_data.append(True)
             self.last_name = last_name
         else:
+            self.valid_data.append(False)
             self.last_name = default
 
         
+if __name__ == '__main__':
 
-user1 = User(first_name='Liam', last_name='Smith', email='liam@example.com')
-user1.validate()
-print(user1.last_name, type(user1.last_name))
+    user1 = User(first_name='Lia', last_name='Smith', email='liam@example.com')
+    print(user1.validate())
+    print(user1.last_name, type(user1.last_name))
