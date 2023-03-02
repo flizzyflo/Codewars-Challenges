@@ -1,4 +1,6 @@
 
+import math
+import re
 def expand(expression: str) -> str:
     
     """
@@ -29,35 +31,76 @@ def expand(expression: str) -> str:
     test.assert_equals(expand("(5m+3)^4"), "625m^4+1500m^3+1350m^2+540m+81")
     test.assert_equals(expand("(2x-3)^3"), "8x^3-36x^2+54x-27")
     test.assert_equals(expand("(7x-7)^0"), "1")
-
-    test.assert_equals(expand("(-5m+3)^4"), "625m^4-1500m^3+1350m^2-540m+81")
+                                                                                  4 * a**4-1 * b      4 * b ** 4-1 * a
+    test.assert_equals(expand("(-5m+3)^4"), "625m^4-1500m^3+1350m^2-540m+81")  -> 4 * 5**3 * 3= 1500; 4 * 3 ** 3 * 5
     test.assert_equals(expand("(-2k-3)^3"), "-8k^3-36k^2-54k-27")
     test.assert_equals(expand("(-7x-7)^0"), "1")
 
     """
-    
-    # recursive solution: (a+b)^3 = (a+b) * (a+b)^2
-    # basecase: exponent = 2 -> return a^2 + 2ab + b^2 (==(a+b)^2)
-    # dictionary für alle variable, und dann zusammenführen derer in der lösung, absteigend nach exponent
-    # basecase: exponent = 1
+
+    regex_pattern: str = "\({1}(-?[0-9]{1,})*([a-z]){1}\+?(-?[0-9]*)\){1}\^{1}([0-9])"
+    # splits expression into number, variable, multiplier
+    # (-2x+3)^4 -> ["-2", "x", "+3", "4"]
+
+    a, variable, b, exponent = re.split(pattern=regex_pattern,
+                                        string=expression)[1:5]
+
+    # type cast to integer for calculation later on
+    exponent = int(exponent)
+    b = int(b)
+
+    if exponent == 0:
+        return "1"
+
+    if a is not None:
+        # if a is within the formula, type cast to integer for calculation
+        a = int(a)
+
+    solution: str = ""
+
+    for k in range(0, exponent):
+        iter_power_b = b ** k
+        c = math.comb(exponent, k)
+        total_val = c * iter_power_b
+
+        exp_str = get_exponent(exponent, k)
+        if (total_val == 1 and k > 0) or (total_val == 1 and a is None):
+            # further iteration or first iteration with no a value
+            total_val = ""
+            solution += f"{total_val}{variable}{exp_str}"
+            continue
+
+        if a is not None:
+            iter_power_a = a ** (exponent - k)
+            total_val = c * iter_power_b * iter_power_a
+
+        if total_val > 0 and solution != "":
+            # add plus sign to value, if not empty string
+            solution += "+"
+
+        exp_str = get_exponent(exponent, k)
+
+        solution += f"{total_val}{variable}{exp_str}"
+
+    iter_power_b = b ** exponent
+
+    if iter_power_b > 0:
+        solution += "+"
+
+    solution += str(iter_power_b)
+
+    return solution
 
 
-    # WIP
+def get_exponent(exponent: int, k: int) -> str:
 
-    term, exponent = expression.split("^")
-
-    if int(exponent) == 0:
-        return 1
-
-    elif int(exponent) == 1:
-        return term
-
-    elif int(exponent) <= 2:
-        return f"{term}^{exponent}"
+    if (exponent - k) == 1:
+        return ""
 
     else:
-        exponent = int(exponent) - 1
-        return term + expand(f"{term}^{exponent}")
+        return f"^{exponent - k}"
 
 
-print(expand("(-2k-3)^1"))
+if __name__ == '__main__':
+    expression = "(12x-3)^2"
+    print(expand(expression=expression))
