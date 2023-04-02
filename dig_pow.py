@@ -17,5 +17,3 @@ def dig_pow(number: int, power: int) -> int:
         else:
             multiplier += 1
 
-
-print(dig_pow(41, 5))
