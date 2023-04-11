@@ -25,14 +25,16 @@ def max_ball(v0: float) -> int:
 
     time_elapsed = 0.0
     height = current_velocity * time_elapsed - 0.5 * gravity * time_elapsed * time_elapsed
-    result: set[tuple[int, float]] = set()
+    result: set[tuple[float, float]] = set()
 
     while height >= 0:
         height = current_velocity * time_elapsed - 0.5 * gravity * time_elapsed * time_elapsed
         result.add(((round(time_elapsed, 1) * 10), float(format(height, "00.4f"))))
         time_elapsed += 0.1
 
-    return int(sorted(result, key= get_height, reverse= True)[0][0])
+    sorted_result = sorted(result, key=get_height, reverse=True)[0][0]
+    return int(sorted_result)
+
 
 def get_height(result_set: set[int, float]) -> float:
     
