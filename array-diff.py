@@ -7,7 +7,3 @@ def array_diff(list_to_filter: list[any], filter_list: list[any]) -> list[any]:
         return []
 
     return [list_element for list_element in list_to_filter if list_element not in filter_list]
-        
-r = ["a", "b"]
-s = ["a", "c"]
-print(array_diff(list_to_filter=r, filter_list=s))
