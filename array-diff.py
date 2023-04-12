@@ -1,14 +1,13 @@
 
-def array_diff(filtered_list: list, compared_list: list) -> list:
+def array_diff(list_to_filter: list[any], filter_list: list[any]) -> list[any]:
 
-    """Returns the filtered list without the items of the compared list"""
+    """Returns the list_to_filter list without the items of the filter_list"""
 
-    if not filtered_list or not compared_list:
+    if not list_to_filter or not filter_list:
         return []
 
-    return [number for number in filtered_list if number not in compared_list]
+    return [list_element for list_element in list_to_filter if list_element not in filter_list]
         
-
-
-
-            
+r = ["a", "b"]
+s = ["a", "c"]
+print(array_diff(list_to_filter=r, filter_list=s))
