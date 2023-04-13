@@ -1,4 +1,4 @@
-def human_years_cat_years_dog_years(human_years):
+def human_years_cat_years_dog_years(human_years: int) -> list[int]:
     
     first_year_cat, first_year_dog = 15, 15
     sec_year_cat, sec_year_dog = 9, 9
